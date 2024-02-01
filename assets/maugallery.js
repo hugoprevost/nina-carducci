@@ -12,7 +12,6 @@
         );
       }
       $.fn.mauGallery.listeners(options);
-
       $(this)
         .children(".gallery-item")
         .each(function(index) {
@@ -28,7 +27,6 @@
             tagsCollection.push(theTag);
           }
         });
-
       if (options.showTags) {
         $.fn.mauGallery.methods.showItemTags(
           $(this),
@@ -36,17 +34,16 @@
           tagsCollection
         );
       }
-
       $(this).fadeIn(500);
     });
   };
   $.fn.mauGallery.defaults = {
     columns: 3,
-    lightBox: true,
+    lightBox: !0,
     lightboxId: null,
-    showTags: true,
+    showTags: !0,
     tagsPosition: "bottom",
-    navigation: true
+    navigation: !0,
   };
   $.fn.mauGallery.listeners = function(options) {
     $(".gallery-item").on("click", function() {
@@ -56,7 +53,6 @@
         return;
       }
     });
-
     $(".gallery").on("click", ".nav-link", $.fn.mauGallery.methods.filterByTag);
     $(".gallery").on("click", ".mg-prev", () =>
       $.fn.mauGallery.methods.prevImage(options.lightboxId)
@@ -137,9 +133,7 @@
       } else {
         $(".item-column").each(function() {
           if (
-            $(this)
-              .children("img")
-              .data("gallery-tag") === activeTag
+            $(this).children("img").data("gallery-tag") === activeTag
           ) {
             imagesCollection.push($(this).children("img"));
           }
@@ -147,15 +141,13 @@
       }
       let index = 0,
         next = null;
-
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
           index = i ;
         }
       });
-      next =
-        imagesCollection[index] ||
-        imagesCollection[imagesCollection.length - 1];
+      index = (index - 1) % imagesCollection.length;
+      next = imagesCollection[index] || imagesCollection[imagesCollection.length - 1];
       $(".lightboxImage").attr("src", $(next).attr("src"));
     },
     nextImage() {
@@ -176,9 +168,7 @@
       } else {
         $(".item-column").each(function() {
           if (
-            $(this)
-              .children("img")
-              .data("gallery-tag") === activeTag
+            $(this).children("img").data("gallery-tag") === activeTag
           ) {
             imagesCollection.push($(this).children("img"));
           }
@@ -186,12 +176,12 @@
       }
       let index = 0,
         next = null;
-
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
           index = i;
         }
       });
+      index = (index + 1) % imagesCollection.length;
       next = imagesCollection[index] || imagesCollection[0];
       $(".lightboxImage").attr("src", $(next).attr("src"));
     },
@@ -218,46 +208,37 @@
                 </div>
             </div>`);
     },
-    showItemTags(gallery, position, tags) {
+    showItemTags(gallery,position,tags){
       var tagItems =
         '<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>';
-      $.each(tags, function(index, value) {
+      $.each(tags,function(index,value){
         tagItems += `<li class="nav-item active">
-                <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
+        <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
       });
-      var tagsRow = `<ul class="my-4 tags-bar nav nav-pills">${tagItems}</ul>`;
-
-      if (position === "bottom") {
-        gallery.append(tagsRow);
-      } else if (position === "top") {
-        gallery.prepend(tagsRow);
+      var tagsRow= `<ul class="my-4 tags-bar nav nav-pills">${tagItems}</ul>`;
+      if(position === "bottom"){
+        gallery.append(tagsRow)
+      } else if(position === "top"){
+        gallery.prepend(tagsRow)
       } else {
-        console.error(`Unknown tags position: ${position}`);
+        console.error(`Unknown tags position: ${position}`)
       }
     },
-    filterByTag() {
-      if ($(this).hasClass("active-tag")) {
-        return;
+    filterByTag(){
+      if($(this).hasClass("active-tag")){
+        return
       }
       $(".active-tag").removeClass("active active-tag");
-      $(this).addClass("active-tag");
-
-      var tag = $(this).data("images-toggle");
-
-      $(".gallery-item").each(function() {
-        $(this)
-          .parents(".item-column")
-          .hide();
-        if (tag === "all") {
-          $(this)
-            .parents(".item-column")
-            .show(300);
-        } else if ($(this).data("gallery-tag") === tag) {
-          $(this)
-            .parents(".item-column")
-            .show(300);
+      $(this).addClass("active active-tag");
+      var tag=$(this).data("images-toggle");
+      $(".gallery-item").each(function(){
+        $(this).parents(".item-column").hide();
+        if(tag==="all"){
+          $(this).parents(".item-column").show(300)
+        } else if($(this).data("gallery-tag")===tag){
+          $(this).parents(".item-column").show(300)
         }
-      });
-    }
-  };
-})(jQuery);
+      })
+    },
+  }
+})(jQuery)
